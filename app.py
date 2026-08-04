@@ -4,4 +4,4 @@ app = FastAPI()
 
 @app.get("/")
 def root():
-  return {"message": "hello"}
+  return {"message": "Staywise API"}
