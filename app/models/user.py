@@ -1,10 +1,9 @@
 from enum import Enum
 from sqlalchemy import Column,Integer,String,Enum as SqlEnum
 from app.database.database import Base
+from app.schemas.user import UserRole
 
-class UserRole(Enum):
-  OWNER="OWNER"
-  TENANT="TENANT"
+
 
 class User(Base):
   __tablename__ = 'users'

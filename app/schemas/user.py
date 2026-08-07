@@ -1,4 +1,4 @@
-from pydantic import BaseModel
+from pydantic import BaseModel,ConfigDict
 from enum import Enum
 from app.database.database import Base
 
@@ -7,15 +7,17 @@ class UserRole(Enum):
   TENANT="TENANT"
   
 class UserCreate(BaseModel):
-  firstName: str
-  lastName: str
+  full_name: str
   email: str
-  phone: int
+  phone: str
   role: UserRole
   password: str
 
 class UserResponse(BaseModel):
+  model_config = ConfigDict(from_attributes=True)
   id: int
-  name: str
+  full_name: str
   email: str
+  phone: str
+  role: UserRole
   
