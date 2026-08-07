@@ -2,7 +2,7 @@ from pydantic import BaseModel,ConfigDict
 from enum import Enum
 from app.database.database import Base
 
-class UserRole(Enum):
+class UserRole(str,Enum):
   OWNER="OWNER"
   TENANT="TENANT"
   
