@@ -21,7 +21,6 @@ def create_user(db: Session, user: UserCreate):
 
     return db_user
 
-def get_user(db:Session,user:UserLogin):
-    db_user = db.query(DBUser).filter(id=user.email)
-    
+def get_user(db:Session,email:str):
+    db_user = db.query(DBUser).filter(email==DBUser.email)
     return db_user

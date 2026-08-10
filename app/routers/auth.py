@@ -17,7 +17,8 @@ def login(user:UserLogin,db:Session = Depends(get_db)):
 
 
 @router.get("/user/id",response_model=UserLogin,status_code=201)
-def getUser(user:UserLogin,deb:Session=Depends(get_db)):
-    return {"message": "user fetched"}
+def getUser(email:str,deb:Session=Depends(get_db)):
+   db_user = get_user(email)
+   return db_user
 # @router.get("/user",response_model=UserLogin)
   
