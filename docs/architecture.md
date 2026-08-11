@@ -154,3 +154,17 @@ Authentication dependency
   v
 Identify user + role + tenant
 
+Current Development Status
+
+The project is under active development.
+
+Current foundation includes:
+
+FastAPI project structure
+PostgreSQL connection
+SQLAlchemy configuration
+Alembic migrations
+Initial user model/database schema
+
+Upcoming modules include authentication, hostel management, rooms, tenants and meal-related functionality.
+
