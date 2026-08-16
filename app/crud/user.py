@@ -6,14 +6,13 @@ from app.core.security import hash_password
 
 
 def create_user(db: Session, user: UserCreate):
-    hashed_password = hash_password(user.password)
 
     db_user = DBUser(
-        full_name=f"{user.firstName} {user.lastName}",
+        full_name=user.full_name,
         email=user.email,
         phone=user.phone,
         role=user.role,
-        password=hashed_password
+        password=hash_password(user.password)
     )
 
     db.add(db_user)
