@@ -9,7 +9,7 @@ router = APIRouter(prefix="/auth",tags=["Authentication"])
 
 @router.post("/register",response_model=UserResponse,status_code=201)
 def register(user:UserCreate,db: Session = Depends(get_db)):
-  existing_user = get_user_by_email(user.email)
+  existing_user = get_user_by_email(db,user.email)
   if existing_user:
     raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
@@ -17,30 +17,20 @@ def register(user:UserCreate,db: Session = Depends(get_db)):
         )
   return create_user(db,user)
 
-@router.post("/login",response_model=UserResponse,status_code=201)
+@router.post("/login",response_model=UserResponse)
 def login(user:UserLogin,db:Session = Depends(get_db)):
-  db_user = get_user
-  existing_user = get_user_by_email(user.email)
+  existing_user = get_user_by_email(db,email=user.email)
   if not existing_user:
     raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Invalid email or password"
         )
-  if not verify_password(user.password, db_user.password):
+  if not verify_password(user.password, existing_user.password):
       raise HTTPException(
           status_code=status.HTTP_401_UNAUTHORIZED,
           detail="Invalid email or password"
       )
-  return {
-    "message":
-      "Login successful",
-      "user":
-        {
-          "name": existing_user.full_name,
-          "email": existing_user.email,
-          "role": existing_user.role
-        }
-  }
+  return existing_user
 
 
 @router.get("/users/{user_id}", response_model=UserResponse)
@@ -58,8 +48,7 @@ def get_user_by_id_route(user_id: int, db: Session = Depends(get_db)):
         )
     
     return db_user
-# @router.get("/user",response_model=UserLogin)
-  
+ 
 @router.get("/users", response_model=UserResponse)
 def get_user_by_email_route(email: str, db: Session = Depends(get_db)):
     """
