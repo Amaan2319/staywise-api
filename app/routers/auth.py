@@ -108,7 +108,7 @@ def get_current_user(
     if user is None:
         raise credentials_exception
 
-    return 
+    return user
 
 @router.get("/me", response_model=UserResponse)
 def get_current_user_route(
