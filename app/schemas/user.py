@@ -25,3 +25,6 @@ class UserResponse(BaseModel):
   phone: str
   role: UserRole
   
+class TokenResponse(BaseModel):
+  access_token: str
+  token_type: str
