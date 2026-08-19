@@ -1,15 +1,13 @@
 from fastapi import APIRouter,Depends,HTTPException, status
-from fastapi.security import OAuth2PasswordBearer,OAuth2PasswordRequestForm
+from fastapi.security import OAuth2PasswordRequestForm
 from app.database.database import get_db
 from app.crud.user import create_user,get_user,get_user_by_email,get_user_by_id
 from sqlalchemy.orm import Session
-import jwt
-from app.core.security import settings
 from app.core.security import verify_password,create_access_token
 from app.schemas.user import UserCreate,UserResponse,UserLogin,TokenResponse
-
+from app.dependencies.permissions import get_current_user
 router = APIRouter(prefix="/auth",tags=["Authentication"])
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/auth/token") 
+
 @router.post("/register",response_model=UserResponse,status_code=201)
 def register(user:UserCreate,db: Session = Depends(get_db)):
   existing_user = get_user_by_email(db,user.email)
@@ -76,39 +74,6 @@ def get_user_by_email_route(email: str, db: Session = Depends(get_db)):
     
     return db_user
 
-def get_current_user(
-    token: str = Depends(oauth2_scheme),
-    db: Session = Depends(get_db)
-):
-    credentials_exception = HTTPException(
-        status_code=status.HTTP_401_UNAUTHORIZED,
-        detail="Could not validate credentials",
-        headers={"WWW-Authenticate": "Bearer"},
-    )
-
-    try:
-        payload = jwt.decode(
-            token,
-            settings.jwt_secret_key,
-            algorithms=[settings.jwt_algorithm]
-        )
-
-        user_id = payload.get("sub")
-
-        if user_id is None:
-            raise credentials_exception
-
-        user_id = int(user_id)
-
-    except (jwt.InvalidTokenError, ValueError):
-        raise credentials_exception
-
-    user = get_user_by_id(db, user_id)
-
-    if user is None:
-        raise credentials_exception
-
-    return user
 
 @router.get("/me", response_model=UserResponse)
 def get_current_user_route(
