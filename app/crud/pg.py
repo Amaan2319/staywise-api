@@ -1,7 +1,7 @@
 from sqlalchemy.orm import Session
 
 from app.models.pg import PG
-from app.schemas.pg import PGCreate
+from app.schemas.pg import PGCreate, PGUpdate
 
 
 def create_pg(
@@ -32,3 +32,16 @@ def get_pgs_by_owner(db: Session, owner_id: int):
         .filter(PG.owner_id == owner_id)
         .all()
     )
+
+def update_pg(
+    db: Session,
+    pg: PG,
+    pg_data: PGUpdate
+):
+    pg.name = pg_data.name
+    pg.address = pg_data.address
+
+    db.commit()
+    db.refresh(pg)
+
+    return pg

@@ -13,3 +13,7 @@ class PGResponse(BaseModel):
     name: str
     address: str
     owner_id: int
+
+class PGUpdate(BaseModel):
+    name: str
+    address: str
