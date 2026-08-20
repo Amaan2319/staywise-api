@@ -6,6 +6,7 @@ from app.database.database import Base
 from app.core.config import settings
 from app.models.user import User
 from app.models.pg import PG
+from app.models.room import Room
 
 from alembic import context
 

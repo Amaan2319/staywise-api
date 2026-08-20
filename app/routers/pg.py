@@ -2,7 +2,7 @@ from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
 
 from app.database.database import get_db
-from app.crud.pg import create_pg, get_pg_by_id, get_pgs_by_owner,update_pg
+from app.crud.pg import create_pg, get_pg_by_id, get_pgs_by_owner,update_pg,delete_pg
 from app.dependencies.permissions import (
     get_current_user,
     get_current_owner
@@ -102,3 +102,18 @@ def update_pg_route(
         pg,
         pg_data
     )
+    
+@router.delete("/{id}")
+def delete_pg_route(pg_id: int,
+    db: Session = Depends(get_db),
+    current_owner: User = Depends(get_current_owner)):
+    pg = get_pg_by_id(db,pg_id)
+    
+    if not pg:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
+                            detail="PG not found")
+        
+    if pg.owner_id != current_owner.id:
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="You do not own this PG!")
+    delete_pg(db,pg)
+    return None

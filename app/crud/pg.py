@@ -45,3 +45,8 @@ def update_pg(
     db.refresh(pg)
 
     return pg
+
+def delete_pg(db: Session, pg: PG):
+    db.delete(pg)
+    db.commit()
+    
