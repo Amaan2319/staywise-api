@@ -117,3 +117,5 @@ def delete_pg_route(pg_id: int,
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="You do not own this PG!")
     delete_pg(db,pg)
     return None
+
+# we will not add routes for rooms
